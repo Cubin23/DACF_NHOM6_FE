@@ -1,14 +1,10 @@
 import { createBrowserRouter, Link } from "react-router-dom";
+import PerfumeList from "../pages/ProductList";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <div>
-        <h1>Hello World</h1>
-        <Link to="about">About Us</Link>
-      </div>
-    ),
+    element: <PerfumeList/>
   },
   {
     path: "about",
