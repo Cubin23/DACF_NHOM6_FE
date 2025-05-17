@@ -1,13 +1,77 @@
-import { createBrowserRouter, Link } from "react-router-dom";
-import PerfumeList from "../pages/ProductList";
+import { createBrowserRouter } from "react-router-dom"
+import MainLayout from "../components/layouts/MainLayout"
+import HomePage from "../pages/HomePage"
+import ProductListingPage from "../pages/ProductListingPage"
+import ProductDetailPage from "../pages/ProductDetailPage"
+import CartPage from "../pages/CartPage"
+import CheckoutPage from "../pages/CheckoutPage"
+import AccountPage from "../pages/AccountPage"
+import LoginPage from "../pages/LoginPage"
+import SignUpPage from "../pages/SignUpPage"
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <PerfumeList/>
+    element: (
+      <MainLayout>
+        <HomePage />
+      </MainLayout>
+    ),
   },
   {
-    path: "about",
-    element: <div>About</div>,
+    path: "/products",
+    element: (
+      <MainLayout>
+        <ProductListingPage />
+      </MainLayout>
+    ),
   },
-]);
+  {
+    path: "/product/:id",
+    element: (
+      <MainLayout>
+        <ProductDetailPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/cart",
+    element: (
+      <MainLayout>
+        <CartPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/checkout",
+    element: (
+      <MainLayout>
+        <CheckoutPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/account",
+    element: (
+      <MainLayout>
+        <AccountPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <MainLayout>
+        <LoginPage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/signup",
+    element: (
+      <MainLayout>
+        <SignUpPage />
+      </MainLayout>
+    ),
+  },
+])
