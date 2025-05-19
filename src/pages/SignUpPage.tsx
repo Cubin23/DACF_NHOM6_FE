@@ -1,6 +1,41 @@
-import { Link } from "react-router-dom"
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  })
+
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = e.target
+    setFormData({...formData, [name]:value})
+  }
+
+  const handleSubmit = async(e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
+    try {
+      const res = await axios.post("http://localhost:8888/api-docs/auth/register", formData)
+      console.log("đăng kí thành công", res.data);
+      navigate("/login")
+    } catch (err) {
+      console.error(err);
+      setError(err.res?.data?.message || "đăng kí thất bại")
+      
+    }finally{
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}
@@ -48,7 +83,7 @@ const SignUpPage = () => {
         </div>
 
         {/* Sign Up Form */}
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -58,6 +93,7 @@ const SignUpPage = () => {
                 type="text"
                 id="name"
                 name="name"
+                onChange={handleChange}
                 className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
                 required
               />
@@ -71,6 +107,7 @@ const SignUpPage = () => {
                 type="email"
                 id="email"
                 name="email"
+                 onChange={handleChange}
                 className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
                 required
               />
@@ -84,6 +121,7 @@ const SignUpPage = () => {
                 type="password"
                 id="password"
                 name="password"
+                 onChange={handleChange}
                 className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
                 required
               />
@@ -95,6 +133,7 @@ const SignUpPage = () => {
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-gray-900 text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors"
             >
               Create account
