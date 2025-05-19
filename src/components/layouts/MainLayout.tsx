@@ -36,20 +36,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             <div className="relative group">
               <Link to="/products" className="text-sm text-gray-500 hover:text-gray-600 flex items-center">
                 Categories
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="ml-1 w-4 h-4"
-                >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
               </Link>
             </div>
             <Link to="/about" className="text-sm text-gray-500 hover:text-gray-600">
@@ -66,7 +52,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
               <input
                 type="text"
                 placeholder="Search products"
-                className="w-full py-2 pl-10 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
+                className="w-full py-2 pl-10 pr-4 text-sm text-black bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
               />
               <div className="absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg
