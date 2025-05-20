@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
+import MyCustomIcon from "./SignUp/components/svg/MyCustomIcon";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const LoginPage = () => {
     setLoading(true)
 
     try {
-      const res = await axios.post("http://localhost:8888/api-docs/auth/login", formData)
+      const res = await axios.post("http://localhost:8888/auth/login", formData)
       console.log("Đăng nhập thành công", res.data)
 
       localStorage.setItem("token", res.data.token)
@@ -55,9 +56,7 @@ const LoginPage = () => {
       <div className="max-w-md mx-auto">
         {/* Google Login */}
         <button className="text-black w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-3 px-4 mb-4 hover:bg-gray-50 transition-colors">
-          <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" fill="#ccc" />
-          </svg>
+          <MyCustomIcon />
           Continue with Google
         </button>
 

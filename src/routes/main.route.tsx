@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom"
 import MainLayout from "../components/layouts/MainLayout"
 import HomePage from "../pages/HomePage"
 import LoginPage from "../pages/LoginPage"
-import SignUpPage from "../pages/SignUpPage"
+import SignUpPage from "../pages/SignUp/SignUpPage"
 import ProductListingPage from "../pages/ProductListingPage"
 import ProductDetailPage from "../pages/ProductDetailPage"
 import CartPage from "../pages/CartPage"
@@ -11,67 +11,18 @@ import AccountPage from "../pages/AccountPage"
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: (
-      <MainLayout>
-        <HomePage />
-      </MainLayout>
-    ),
-  },
-  {
-    path: "/products",
-    element: (
-      <MainLayout>
-        <ProductListingPage />
-      </MainLayout>
-    ),
-  },
-  {
-    path: "/cart",
-    element: (
-      <MainLayout>
-        <CartPage />
-      </MainLayout>
-    ),
-  },
-  {
-    path: "/product/:id",
-    element: (
-      <MainLayout>
-        <ProductDetailPage />
-      </MainLayout>
-    ),
-  },
-  {
-    path: "/checkout",
-    element: (
-      <MainLayout>
-        <CheckoutPage />
-      </MainLayout>
-    ),
-  },
-  {
-    path: "/account",
-    element: (
-      <MainLayout>
-        <AccountPage />
-      </MainLayout>
-    ),
-  },
-  {
-    path: "/login",
-    element: (
-      <MainLayout>
-        <LoginPage />
-      </MainLayout>
-    ),
-  },
-  {
-    path: "/register",
-    element: (
-      <MainLayout>
-        <SignUpPage />
-      </MainLayout>
-    ),
-  },
+  path: "/",
+  element: <MainLayout />,
+  children: [
+    { index: true, element: <HomePage /> },
+    { path: "products", element: <ProductListingPage /> },
+    { path: "product/:id", element: <ProductDetailPage /> },
+    { path: "cart", element: <CartPage /> },
+    { path: "checkout", element: <CheckoutPage /> },
+    { path: "account", element: <AccountPage /> },
+    { path: "login", element: <LoginPage /> },
+    { path: "register", element: <SignUpPage /> },
+  ],
+}
+
 ])
