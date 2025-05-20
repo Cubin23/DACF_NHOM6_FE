@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import SP from "../pic/1.png";
+import VolumeButton from "./SignUp/components/svg/CustomButton";
+
 
 const ProductListingPage = () => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([
@@ -14,6 +16,10 @@ const ProductListingPage = () => {
   const removeFilter = (filter: string) => {
     setSelectedFilters(selectedFilters.filter((f) => f !== filter));
   };
+
+  function setSelectedVolume(volume: string): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -77,24 +83,16 @@ const ProductListingPage = () => {
             <div className="mb-6">
               <h3 className="font-medium mb-3 text-gray-600">Size</h3>
               <div className="grid grid-cols-3 gap-2">
-                <button className="text-gray-500 hover:text-black px-2 py-1 text-xs border border-gray-300 rounded">
-                  10ml
-                </button>
-                <button className="text-gray-500 hover:text-black px-2 py-1 text-xs border border-gray-300 rounded">
-                  30ml
-                </button>
-                <button className="text-gray-500 hover:text-black px-2 py-1 text-xs border border-gray-300 rounded">
-                  50ml
-                </button>
-                <button className="text-gray-500 hover:text-black px-2 py-1 text-xs border border-gray-300 rounded">
-                  75ml
-                </button>
-                <button className="text-gray-500 hover:text-black px-2 py-1 text-xs border border-gray-300 rounded">
-                  100ml
-                </button>
-                <button className="text-gray-500 hover:text-black px-2 py-1 text-xs border border-gray-300 rounded">
-                  150ml
-                </button>
+                 <div className="flex space-x-2">
+      {["100ml", "150ml", "200ml"].map((volume) => (
+        <VolumeButton
+          key={volume}
+          label={volume}
+          isSelected={setSelectedVolume === volume}
+          onClick={() => setSelectedVolume(volume)}
+        />
+      ))}
+    </div>
               </div>
             </div>
 
