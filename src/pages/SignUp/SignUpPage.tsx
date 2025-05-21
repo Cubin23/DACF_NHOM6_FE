@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "react-router-dom"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form"; // ✅ THÊM DÒNG NÀY
 import type { UserRegister } from "../../interface/type";
 import MyCustomIcon from "./components/svg/MyCustomIcon";
+// import { message } from "antd"; // nếu dùng message thì cần import thư viện (ví dụ từ antd)
 
 const SignUpPage = () => {
   const {
@@ -17,10 +18,10 @@ const SignUpPage = () => {
   const onSubmit = async (user: UserRegister) => {
     try {
       await axios.post("http://localhost:8888/auth/register", user);
-      message.success("🎉 Đăng ký thành công!");
+      alert("🎉 Đăng ký thành công!"); // hoặc dùng message.success nếu có import từ AntD
       navigate("/login");
     } catch (error: any) {
-      message.error(error.response?.data?.message?.[0] || "❌ Đăng ký thất bại!");
+      alert(error.response?.data?.message?.[0] || "❌ Đăng ký thất bại!"); // hoặc message.error(...)
     }
   };
   return (
@@ -166,7 +167,3 @@ const SignUpPage = () => {
 }
 
 export default SignUpPage
-function useForm<T>(): { register: any; handleSubmit: any; formState: { errors: any; }; } {
-  throw new Error("Function not implemented.");
-}
-

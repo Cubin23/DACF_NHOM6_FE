@@ -1,13 +1,22 @@
 import { createBrowserRouter } from "react-router-dom"
 import MainLayout from "../components/layouts/MainLayout"
 import HomePage from "../pages/HomePage"
-import LoginPage from "../pages/LoginPage"
-import SignUpPage from "../pages/SignUp/SignUpPage"
 import ProductListingPage from "../pages/ProductListingPage"
 import ProductDetailPage from "../pages/ProductDetailPage"
 import CartPage from "../pages/CartPage"
 import CheckoutPage from "../pages/CheckoutPage"
 import AccountPage from "../pages/AccountPage"
+
+import SignUpPage from "../pages/SignUp/SignUpPage"
+import LoginPage from "../pages/LoginPage"
+import Dashboard from "../pages/Admin/Dashboard"
+import AdminLayout from "../components/layouts/AdminLayout"
+import Product from "../pages/Admin/Product"
+import Orders from "../pages/Admin/Orders"
+import Customers from "../pages/Admin/Customers"
+import Reviews from "../pages/Admin/Reviews"
+import Setting from "../pages/Admin/Setting"
+
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +31,19 @@ export const router = createBrowserRouter([
       { path: "account", element: <AccountPage /> },
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <SignUpPage /> },
+      
     ],
   },
+  {
+    path: "/dashboard",
+    element: <AdminLayout />,
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: "products", element: <Product /> },
+      { path: "orders", element: <Orders /> },
+      { path: "customers", element: <Customers /> },
+      { path: "reviews", element: <Reviews /> },
+      { path: "settings", element: <Setting /> },
+    ],
+  }
 ])
