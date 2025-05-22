@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { mockPerfumes, type Perfume } from '../../types/product/products';
+import { mockPerfumes, type Perfume } from '../types/product/products';
 
 export default function PerfumeList() {
   const [products, setProducts] = useState<Perfume[]>([]);

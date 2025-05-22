@@ -16,14 +16,14 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (user: UserRegister) => {
-    try {
-      await axios.post("http://localhost:8888/auth/register", user);
-      alert("🎉 Đăng ký thành công!"); // hoặc dùng message.success nếu có import từ AntD
-      navigate("/login");
-    } catch (error: any) {
-      alert(error.response?.data?.message?.[0] || "❌ Đăng ký thất bại!"); // hoặc message.error(...)
-    }
-  };
+  try {
+    await axios.post("http://localhost:8888/auth/register", user);
+    alert("🎉 Đăng ký thành công! Vui lòng kiểm tra email để xác minh.");
+    navigate("/verify-email", { state: { email: user.email } }); // chuyển sang verify-email
+  } catch (error: any) {
+    alert(error.response?.data?.message?.[0] || "❌ Đăng ký thất bại!");
+  }
+};
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}

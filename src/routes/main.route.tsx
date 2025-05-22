@@ -16,6 +16,7 @@ import Orders from "../pages/Admin/Orders"
 import Customers from "../pages/Admin/Customers"
 import Reviews from "../pages/Admin/Reviews"
 import Setting from "../pages/Admin/Setting"
+import VerifyEmail from "../pages/VerifyEmail"
 
 
 export const router = createBrowserRouter([
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { path: "account", element: <AccountPage /> },
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <SignUpPage /> },
+      { path: "verify-email", element: <VerifyEmail /> },
       
     ],
   },
