@@ -9,14 +9,6 @@ import AccountPage from "../pages/AccountPage"
 
 import SignUpPage from "../pages/SignUp/SignUpPage"
 import LoginPage from "../pages/LoginPage"
-import Dashboard from "../pages/Admin/Dashboard"
-import AdminLayout from "../components/layouts/AdminLayout"
-import Product from "../pages/Admin/Product"
-import Orders from "../pages/Admin/Orders"
-import Customers from "../pages/Admin/Customers"
-import Reviews from "../pages/Admin/Reviews"
-import Setting from "../pages/Admin/Setting"
-
 
 export const router = createBrowserRouter([
   {
@@ -34,16 +26,5 @@ export const router = createBrowserRouter([
       
     ],
   },
-  {
-    path: "/dashboard",
-    element: <AdminLayout />,
-    children: [
-      { index: true, element: <Dashboard /> },
-      { path: "products", element: <Product /> },
-      { path: "orders", element: <Orders /> },
-      { path: "customers", element: <Customers /> },
-      { path: "reviews", element: <Reviews /> },
-      { path: "settings", element: <Setting /> },
-    ],
-  }
+
 ])
