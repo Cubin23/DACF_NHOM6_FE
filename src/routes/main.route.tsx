@@ -9,6 +9,7 @@ import AccountPage from "../pages/AccountPage"
 
 import SignUpPage from "../pages/SignUp/SignUpPage"
 import LoginPage from "../pages/LoginPage"
+import VerifyEmail from "../pages/VerifyEmail"
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,8 @@ export const router = createBrowserRouter([
       { path: "account", element: <AccountPage /> },
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <SignUpPage /> },
+      { path: "verify-email", element: <VerifyEmail /> },
+
       
     ],
   },

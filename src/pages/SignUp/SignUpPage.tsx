@@ -19,7 +19,8 @@ const SignUpPage = () => {
     try {
       await axios.post("http://localhost:8888/auth/register", user);
       alert("🎉 Đăng ký thành công!"); // hoặc dùng message.success nếu có import từ AntD
-      navigate("/login");
+     navigate("/verify-email");
+
     } catch (error: any) {
       alert(error.response?.data?.message?.[0] || "❌ Đăng ký thất bại!"); // hoặc message.error(...)
     }
