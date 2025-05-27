@@ -1,6 +1,6 @@
 import { ShoppingCart, User } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import Logo from "../../pic/th-removebg-preview - Copy.png"
+import Logo from "../../assets/pic/th-removebg-preview - Copy.png"
 const Header = () => {
   return (
     
