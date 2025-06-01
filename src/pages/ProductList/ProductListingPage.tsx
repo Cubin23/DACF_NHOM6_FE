@@ -200,7 +200,7 @@ const ProductListingPage = () => {
               products.map((product) => (
                 <Link
                   to={`/product/${product._id}`}
-                  className="group"
+                  className="group text-red-500"
                   key={product._id}
                 >
                   <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
@@ -215,7 +215,7 @@ const ProductListingPage = () => {
                     <div className="text-xs text-gray-500">
                       {product.gender}
                     </div>
-                    <div className="font-medium">
+                    <div className="text-xs text-gray-500">
                       {product.brand_id?.name || "No Brand"}
                     </div>
                   </div>

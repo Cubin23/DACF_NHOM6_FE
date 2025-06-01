@@ -80,13 +80,6 @@ const SignUpPage = () => {
             error={errors.password}
           />
 
-          <InputField
-            label="Phone Number"
-            placeholder="Type your phone number..."
-            {...register("phone", { required: "Không được để trống" })}
-            error={errors.phone}
-          />
-
           <div className="text-sm text-gray-600 mt-2">
             By Creating An Account You Agree With Our Terms Of Service, Privacy
             Policy.

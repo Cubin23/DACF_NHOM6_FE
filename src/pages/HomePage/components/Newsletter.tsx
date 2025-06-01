@@ -14,7 +14,7 @@ const Newsletter: FC = () => (
           <input
             type="email"
             placeholder="Your email address"
-            className="w-full px-4 py-3 text-sm bg-gray-100 border border-gray-200 rounded-l-md focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className="w-full px-4 py-3 text-sm bg-gray-100 border border-gray-200 rounded-l-md text-black focus:outline-none focus:ring-2 focus:ring-gray-200"
           />
           <button className="px-6 py-3 bg-gray-900 text-white text-sm font-medium rounded-r-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2">
             Subscribe
