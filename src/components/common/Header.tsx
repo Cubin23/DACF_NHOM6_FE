@@ -42,7 +42,7 @@ const Header = () => {
 
         <nav className="hidden md:flex items-center space-x-6">
           <Link to="/" className="text-sm text-gray-500 hover:text-gray-700">Home</Link>
-          <Link to="/products" className="text-sm text-gray-500 hover:text-gray-700">Categories</Link>
+          <Link to="/products" className="text-sm text-gray-500 hover:text-gray-700">Products</Link>
           <Link to="/about" className="text-sm text-gray-500 hover:text-gray-700">About</Link>
           <Link to="/contact" className="text-sm text-gray-500 hover:text-gray-700">Contact</Link>
         </nav>
