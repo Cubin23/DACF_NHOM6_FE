@@ -5,11 +5,14 @@ import SidebarLink from "./components/SidebarLink";
 import Avatar from "./components/Avatar";
 import InputField from "./components/InputField";
 import CustomButton from "./components/CustomButton";
+import { Link } from "react-router-dom";
 
 const AccountPage = () => {
   const [userData, setUserData] = useState({
-    fullName: "Hung Bui",
+    name: "Bùi Quốc Hùng",
     email: "hugn7125@gmail.com",
+    phone: "0867355800",
+    address: "Phạm Văn Đồng",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,19 +26,24 @@ const AccountPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-10">
       <div className="flex items-center text-sm mb-8">
-        <a href="/" className="text-gray-500 hover:text-gray-900">
+        <Link to="/" className="text-gray-500 hover:text-gray-900">
           Ecommerce
-        </a>
+        </Link>
         <span className="mx-2 text-gray-400">/</span>
-        <span className="font-medium text-black">My Account</span>
+        <span className="mx-2 text-black">Settings</span>
+        <span className="mx-2 text-gray-400">/</span>
+        <span className="mx-2 text-black">My Account</span>
       </div>
 
-      <h1 className="text-2xl font-bold mb-8 text-black">My Account</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-10">
+        Account Details
+      </h1>
 
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="md:w-1/4 space-y-1">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* Sidebar */}
+        <aside className="space-y-2">
           <SidebarLink to="/account/orders" icon={<Package />} label="Orders" />
           <SidebarLink
             to="/account/wishlist"
@@ -55,39 +63,60 @@ const AccountPage = () => {
             exactActive
           />
           <SidebarLink to="/logout" icon={<LogOut />} label="Logout" />
-        </div>
+        </aside>
 
-        <div className="md:w-3/4 bg-white rounded-lg p-6">
-          <div className="flex space-x-32">
+        {/* Form content */}
+        <section className="md:col-span-3 bg-white p-6 rounded-2xl shadow-sm">
+          <div className="flex items-center gap-6 mb-6">
             <Avatar initials="HB" />
-
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-4 max-w-md">
-                <InputField
-                  id="fullName"
-                  label="Full name"
-                  name="fullName"
-                  value={userData.fullName}
-                  onChange={handleChange}
-                />
-                <InputField
-                  id="email"
-                  label="Email"
-                  type="email"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleChange}
-                />
-
-                <div className="pt-4">
-                  <CustomButton type="submit" variant="primary">
-                    Save Changes
-                  </CustomButton>
-                </div>
-              </div>
-            </form>
+            <div>
+              <p className="text-lg font-semibold text-gray-900">
+                {userData.name}
+              </p>
+              <p className="text-sm text-gray-500">{userData.email}</p>
+            </div>
           </div>
-        </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
+            <InputField
+              id="name"
+              label="Full Name"
+              name="name"
+              value={userData.name}
+              onChange={handleChange}
+            />
+            <InputField
+              id="email"
+              label="Email Address"
+              type="email"
+              name="email"
+              value={userData.email}
+              onChange={handleChange}
+            />
+            <InputField
+              id="phone"
+              label="Phone Number"
+              type="phone"
+              name="phone"
+              value={userData.phone}
+              onChange={handleChange}
+            />
+            <InputField
+              id="address"
+              label="Address"
+              type="address"
+              name="address"
+              value={userData.address}
+              onChange={handleChange}
+            />
+
+            <div className="pt-2">
+              <CustomButton type="submit" variant="primary">
+                Save Changes
+              </CustomButton>
+            </div>
+          </form>
+        </section>
       </div>
     </div>
   );

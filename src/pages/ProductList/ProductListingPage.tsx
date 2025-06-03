@@ -72,7 +72,6 @@ const ProductListingPage = () => {
         </Link>
         <span className="mx-2 text-gray-400">/</span>
         <span className="mx-2 text-black">Products</span>
-        <span className="font-medium">Search</span>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
