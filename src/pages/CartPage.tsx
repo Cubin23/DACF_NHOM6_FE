@@ -11,27 +11,14 @@ const CartPage = () => {
       id: 1,
       name: "Raw Black T-Shirt Lineup",
       price: 75.0,
-      quantity: 11,
+      quantity: 2,
       size: "30ml",
-      image: {
-      src: SP,
-      width: 100,
-      height: 100
+      image: SP,
     }
-    },
-    {
-      id: 2,
-      name: "Essential Neutrals",
-      price: 22.0,
-      quantity: 5,
-      size: "100ml",
-      image: "/placeholder.svg?height=100&width=100",
-    },
   ])
 
   const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return
-
     setCartItems(cartItems.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item)))
   }
 
@@ -43,13 +30,67 @@ const CartPage = () => {
   const tax = 3.0
   const total = subtotal + tax
 
+  const handleCheckout = async () => {
+    try {
+      const payload = {
+        user_id: "64b8f3a23c6f5a8d12345678",
+        customer_info: {
+          username: "Nguyen Van A",
+          phone_number: "0123456789",
+          email: "a@example.com"
+        },
+        receiver_info: {
+          username: "Nguyen Van B",
+          phone_number: "0987654321",
+          email: "b@example.com"
+        },
+        shipping_address: {
+          detail_address: "123 Đường ABC",
+          province: "Hà Nội",
+          district: "Ba Đình",
+          ward: "Phúc Xá"
+        },
+        total_amount: total,
+        status: "pending",
+        is_paid: false,
+        payment_status: "pending",
+        payment_method: "COD",
+        transaction_id: "",
+        shipping_fee: 0,
+        description: "Giao hàng trong ngày",
+        tracking_number: "",
+        user_note: "Giao giờ hành chính",
+        cart_items: cartItems
+      }
+
+      const response = await fetch("http://localhost:8888/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to place order")
+      }
+
+      const result = await response.json()
+      alert("Đặt hàng thành công!")
+      console.log("Order result:", result)
+
+      setCartItems([]) // clear cart
+    } catch (error) {
+      console.error("Checkout error:", error)
+      alert("Có lỗi xảy ra khi đặt hàng.")
+    }
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}
       <div className="flex items-center text-sm mb-8">
-        <Link to="/" className="text-gray-500 hover:text-gray-900">
-          Ecommerce
-        </Link>
+        <Link to="/" className="text-gray-500 hover:text-gray-900">Ecommerce</Link>
         <span className="mx-2 text-gray-400">/</span>
         <span className="font-medium text-black">Cart</span>
       </div>
@@ -76,11 +117,7 @@ const CartPage = () => {
               {cartItems.map((item) => (
                 <div key={item.id} className="flex border-b py-4">
                   <div className="w-24 h-24 bg-gray-100 rounded flex-shrink-0">
-                    <img
-                      src={SP}
-                      alt={item.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={SP} alt={item.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="ml-4 flex-grow">
                     <div className="flex justify-between">
@@ -143,12 +180,12 @@ const CartPage = () => {
               </div>
             </div>
 
-            <Link
-              to="/checkout"
+            <button
+              onClick={handleCheckout}
               className="w-full block text-center px-6 py-3 bg-gray-900 text-white font-medium rounded hover:bg-gray-800"
             >
               Checkout
-            </Link>
+            </button>
 
             <Link
               to="/products"

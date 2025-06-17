@@ -16,7 +16,11 @@ export  default function VerifyEmail()  {
       return;
     }
     try {
-      await axios.post("http://localhost:8888/auth/verify-email", { email, code });
+      await axios.post("http://localhost:8888/auth/verify-email", {
+  email: email.trim(),
+  code: code.trim(),
+});
+
       setMessage("Xác minh thành công! Bạn có thể đăng nhập.");
       setTimeout(() => navigate("/login"), 2000);
     } catch (error: any) {
