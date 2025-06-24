@@ -1,9 +1,12 @@
 export interface IUser {
-    id:number|string,
-    name:string,
-    phone:string,
-    email:string,
-    password:string
+  id: number | string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  password: string;
 }
-export type UserRegister = Omit<IUser,"id">
-export type UserLogin = Pick<IUser,"email"|"password">
+
+export type UserRegister = Pick<IUser, "name" | "email" | "password">;
+
+export type UserLogin = Pick<IUser, "email" | "password">;

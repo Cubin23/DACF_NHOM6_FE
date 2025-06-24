@@ -1,12 +1,10 @@
-"use client";
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Heart, Minus, Plus, Share2 } from "lucide-react";
-import SP1 from "../pic/4.png";
-import SP2 from "../pic/1.png";
-import SP3 from "../pic/2.png";
-import SP4 from "../pic/3.png";
+import SP1 from "../../assets/pic/4.png";
+import SP2 from "../../assets/pic/1.png";
+import SP3 from "../../assets/pic/2.png";
+import SP4 from "../../assets/pic/3.png";
 
 const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
@@ -25,7 +23,6 @@ const ProductDetailPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Breadcrumb */}
       <div className="flex items-center text-sm mb-8">
         <Link to="/" className="text-gray-500 hover:text-gray-900">
           Ecommerce
@@ -39,7 +36,6 @@ const ProductDetailPage = () => {
       </div>
 
       <div className="flex flex-col md:flex-row gap-8 mb-16">
-        {/* Product Images */}
         <div className="md:w-1/2">
           <div className="bg-gray-100 rounded-lg mb-4 aspect-square flex items-center justify-center">
             <img
@@ -58,7 +54,6 @@ const ProductDetailPage = () => {
           </div>
         </div>
 
-        {/* Product Info */}
         <div className="md:w-1/2">
           <div className="flex justify-between items-start">
             <h1 className="text-2xl font-bold mb-2 text-gray-500">
@@ -69,7 +64,6 @@ const ProductDetailPage = () => {
             </button>
           </div>
 
-          {/* Reviews */}
           <div className="flex items-center mb-4">
             <div className="flex">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -89,14 +83,10 @@ const ProductDetailPage = () => {
             </span>
           </div>
 
-          {/* Price */}
           <div className="text-2xl font-bold mb-6 text-red-500">$75.00</div>
 
-          {/* Size Options */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold mb-3 text-gray-700">
-              SIZE
-            </h3>
+            <h3 className="text-sm font-semibold mb-3 text-gray-700">SIZE</h3>
             <div className="grid grid-cols-4 gap-2">
               {["10ml", "30ml", "50ml", "100ml"].map((size) => (
                 <button
@@ -114,7 +104,6 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          {/* Quantity */}
           <div className="mb-6">
             <h3 className="text-sm font-medium mb-2 text-gray-500">QUANTITY</h3>
             <div className="flex">
@@ -136,7 +125,6 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          {/* Add to Cart */}
           <div className="flex space-x-4 mb-6">
             <button className="flex-1 bg-gray-900 text-white py-3 px-6 rounded hover:bg-gray-800 transition-colors">
               Add to cart
@@ -146,12 +134,10 @@ const ProductDetailPage = () => {
             </button>
           </div>
 
-          {/* Free Shipping */}
           <div className="text-sm text-gray-500 mb-8">
             — FREE SHIPPING ON ORDERS $100+
           </div>
 
-          {/* Product Details Tabs */}
           <div className="border-b border-gray-200 mb-6">
             <div className="flex space-x-8">
               <button
@@ -177,7 +163,6 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          {/* Tab Content */}
           <div>
             {activeTab === "details" && (
               <div className="text-gray-600 text-sm leading-relaxed">
@@ -281,7 +266,6 @@ const ProductDetailPage = () => {
         </div>
       </div>
 
-      {/* Related Products */}
       <div className="mb-16">
         <h2 className="text-2xl font-bold mb-8">You might also like</h2>
         <div className="text-sm text-gray-500 uppercase mb-6">
@@ -289,7 +273,6 @@ const ProductDetailPage = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {/* Product 1 */}
           <div className="group">
             <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
               <img
@@ -309,7 +292,6 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          {/* Product 2 */}
           <div className="group">
             <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
               <img
@@ -329,7 +311,6 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          {/* Product 3 */}
           <div className="group">
             <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
               <img
@@ -347,7 +328,6 @@ const ProductDetailPage = () => {
             </div>
           </div>
 
-          {/* Product 4 */}
           <div className="group">
             <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
               <img

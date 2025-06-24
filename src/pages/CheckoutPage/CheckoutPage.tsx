@@ -1,9 +1,7 @@
-"use client"
+import type React from "react";
 
-import type React from "react"
-
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const CheckoutPage = () => {
   const [formData, setFormData] = useState({
@@ -14,22 +12,20 @@ const CheckoutPage = () => {
     country: "",
     email: "",
     fullName: "",
-  })
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission
-    console.log("Form submitted:", formData)
-  }
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Breadcrumb */}
       <div className="flex items-center text-sm mb-8">
         <Link to="/" className="text-gray-500 hover:text-gray-900">
           Ecommerce
@@ -41,14 +37,18 @@ const CheckoutPage = () => {
       <h1 className="text-2xl font-bold mb-8 text-black">Checkout</h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Shipping Form */}
         <div className="lg:w-2/3">
           <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-6 text-black">Shipping Address</h2>
+            <h2 className="text-xl font-semibold mb-6 text-black">
+              Shipping Address
+            </h2>
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="streetAddress"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Street Address
                   </label>
                   <input
@@ -63,7 +63,10 @@ const CheckoutPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="city"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       City
                     </label>
                     <input
@@ -76,7 +79,10 @@ const CheckoutPage = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="state"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       State
                     </label>
                     <input
@@ -92,20 +98,26 @@ const CheckoutPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="zipCode"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Phone Number
                     </label>
                     <input
                       type="text"
-                      id="zipCode"
-                      name="zipCode"
+                      id="phonenumber"
+                      name="phonenumber"
                       value={formData.phonenumber}
                       onChange={handleChange}
                       className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
                     />
                   </div>
                   <div>
-                    <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="country"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Country
                     </label>
                     <input
@@ -121,7 +133,10 @@ const CheckoutPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Email
                     </label>
                     <input
@@ -134,7 +149,10 @@ const CheckoutPage = () => {
                     />
                   </div>
                   <div>
-                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="fullName"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Full name
                     </label>
                     <input
@@ -152,14 +170,18 @@ const CheckoutPage = () => {
           </div>
         </div>
 
-        {/* Order Summary */}
         <div className="lg:w-1/3">
           <div className="border rounded-lg p-6">
-            <h2 className="text-lg font-semibold mb-4 text-black">Your Order</h2>
+            <h2 className="text-lg font-semibold mb-4 text-black">
+              Your Order
+            </h2>
 
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
-                <Link to="/cart" className="text-sm text-gray-600 hover:text-gray-900">
+                <Link
+                  to="/cart"
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
                   Edit Cart
                 </Link>
               </div>
@@ -195,7 +217,7 @@ const CheckoutPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CheckoutPage
+export default CheckoutPage;

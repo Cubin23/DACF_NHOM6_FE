@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -16,11 +16,7 @@ export  default function VerifyEmail()  {
       return;
     }
     try {
-      await axios.post("http://localhost:8888/auth/verify-email", {
-  email: email.trim(),
-  code: code.trim(),
-});
-
+      await axios.post("http://localhost:8888/auth/verify-email", { email, code });
       setMessage("Xác minh thành công! Bạn có thể đăng nhập.");
       setTimeout(() => navigate("/login"), 2000);
     } catch (error: any) {
