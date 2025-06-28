@@ -6,13 +6,11 @@ import VolumeButton from "./components/CustomButton";
 
 const GENDERS = ["Men", "Women", "Unisex"];
 const VOLUMES = ["100ml", "150ml", "200ml"];
-const TYPES = ["Spray", "Roll-on", "Solid-perfume", "Oil"];
 
 const ProductListingPage = () => {
-  const [selectedGenders, setSelectedGenders] = useState<string[]>(["Unisex"]);
-  const [selectedVolumes, setSelectedVolumes] = useState<string[]>(["100ml"]);
+  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
+  const [selectedVolumes, setSelectedVolumes] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -51,18 +49,33 @@ const ProductListingPage = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
-        const res = await fetch("http://localhost:8888/products");
+        const params = new URLSearchParams();
+        if (selectedGenders.length > 0) {
+          params.append("genders", selectedGenders.join(","));
+        }
+        if (selectedVolumes.length > 0) {
+          params.append("volumes", selectedVolumes.join(","));
+        }
+        if (selectedTypes.length > 0) {
+          params.append("types", selectedTypes.join(","));
+        }
+
+        const res = await fetch(`http://localhost:8888/productVariant?${params.toString()}`);
         const json = await res.json();
-        setProducts(json.data.data);
+        const data = Array.isArray(json) ? json : json.data || [];
+        setProducts(data);
       } catch (error) {
-        console.error("Failed to fetch products:", error);
+        console.error("Lỗi khi tải sản phẩm:", error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
     };
+
     fetchProducts();
-  }, []);
+  }, [selectedGenders, selectedVolumes, selectedTypes]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -78,7 +91,6 @@ const ProductListingPage = () => {
         <aside className="lg:w-1/4">
           <div className="border rounded-lg p-4 sticky top-4">
             <h2 className="font-medium mb-3 text-black">Filters Sidebar</h2>
-
             <div className="mb-6">
               <h3 className="font-medium mb-3 text-gray-600">Gender</h3>
               <div className="space-y-2">
@@ -89,25 +101,15 @@ const ProductListingPage = () => {
                       id={gender.toLowerCase()}
                       className="h-4 w-4 text-gray-900 border-gray-300 rounded"
                       checked={selectedGenders.includes(gender)}
-                      onChange={() =>
-                        toggleFilter(
-                          gender,
-                          selectedGenders,
-                          setSelectedGenders
-                        )
-                      }
+                      onChange={() => toggleFilter(gender, selectedGenders, setSelectedGenders)}
                     />
-                    <label
-                      htmlFor={gender.toLowerCase()}
-                      className="ml-2 text-sm text-gray-600 cursor-pointer"
-                    >
+                    <label htmlFor={gender.toLowerCase()} className="ml-2 text-sm text-gray-600 cursor-pointer">
                       {gender}
                     </label>
                   </div>
                 ))}
               </div>
             </div>
-
             <div className="mb-6">
               <h3 className="font-medium mb-3 text-gray-600">Size</h3>
               <div className="flex space-x-2">
@@ -116,31 +118,8 @@ const ProductListingPage = () => {
                     key={volume}
                     label={volume}
                     isSelected={selectedVolumes.includes(volume)}
-                    onClick={() =>
-                      toggleFilter(volume, selectedVolumes, setSelectedVolumes)
-                    }
+                    onClick={() => toggleFilter(volume, selectedVolumes, setSelectedVolumes)}
                   />
-                ))}
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="font-medium mb-3 text-gray-600">Type</h3>
-              <div className="grid grid-cols-3 gap-2">
-                {TYPES.map((type) => (
-                  <button
-                    key={type}
-                    className={`px-2 py-1 text-xs border rounded ${
-                      selectedTypes.includes(type)
-                        ? "border-black text-black"
-                        : "border-gray-300 text-gray-500 hover:text-black"
-                    }`}
-                    onClick={() =>
-                      toggleFilter(type, selectedTypes, setSelectedTypes)
-                    }
-                  >
-                    {type}
-                  </button>
                 ))}
               </div>
             </div>
@@ -152,21 +131,12 @@ const ProductListingPage = () => {
             <div className="text-sm text-gray-500 mb-2">Applied Filters:</div>
             <div className="flex flex-wrap gap-2 text-black">
               {appliedFilters.length === 0 && (
-                <span className="text-gray-400 text-xs">
-                  No filters applied
-                </span>
+                <span className="text-gray-400 text-xs">No filters applied</span>
               )}
               {appliedFilters.map((filter) => (
-                <span
-                  key={filter}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-gray-100"
-                >
+                <span key={filter} className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-gray-100">
                   {filter}
-                  <button
-                    onClick={() => removeFilter(filter)}
-                    className="ml-1 text-gray-500 hover:text-gray-900"
-                    aria-label={`Remove filter ${filter}`}
-                  >
+                  <button onClick={() => removeFilter(filter)} className="ml-1 text-gray-500 hover:text-gray-900">
                     <X className="w-3 h-3" />
                   </button>
                 </span>
@@ -176,8 +146,7 @@ const ProductListingPage = () => {
 
           <div className="flex justify-between items-center mb-6">
             <div className="text-sm text-gray-500">
-              Showing {products.length} products of total {products.length}{" "}
-              products.
+              Showing {products.length} products.
             </div>
             <div className="flex items-center">
               <span className="text-sm text-gray-500 mr-2">SORT BY</span>
@@ -192,34 +161,40 @@ const ProductListingPage = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading ? (
-              <div className="col-span-full text-center text-gray-500">
-                Loading...
-              </div>
+              <div className="col-span-full text-center text-gray-500">Loading...</div>
+            ) : products.length === 0 ? (
+              <div className="col-span-full text-center text-gray-400">Không có sản phẩm nào phù hợp.</div>
             ) : (
-              products.map((product) => (
-                <Link
-                  to={`/product/${product._id}`}
-                  className="group text-red-500"
-                  key={product._id}
-                >
-                  <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <h3 className="font-medium">{product.name}</h3>
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="text-xs text-gray-500">
-                      {product.gender}
+              products.map((product: any) => {
+                const image = product.product?.image || product.product_id?.image || "";
+                const name = product.product?.name || product.product_id?.name || "No Name";
+                const gender = product.product?.gender || product.product_id?.gender || "Unisex";
+                const volume = product.volume?.label || product.volume_id?.label || "";
+                const price = Number(product.price?.$numberDecimal || 0);
+
+                return (
+                  <Link to={`/product/${product._id}`} className="group" key={product._id}>
+                    <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                      {image ? (
+                        <img
+                          src={image}
+                          alt={name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No Image</div>
+                      )}
                     </div>
-                    <div className="text-xs text-gray-500">
-                      {product.brand_id?.name || "No Brand"}
+                    <h3 className="font-medium text-sm text-gray-800">{name}</h3>
+                    <div className="text-gray-900 font-semibold mt-1 text-sm">
+                      {price > 0 ? `${price.toLocaleString()}₫` : "Chưa có giá"}
                     </div>
-                  </div>
-                </Link>
-              ))
+                    <div className="text-xs text-gray-500 mt-1">
+                      {gender} | {volume}
+                    </div>
+                  </Link>
+                );
+              })
             )}
           </div>
 
@@ -228,12 +203,8 @@ const ProductListingPage = () => {
               <button className="p-2 border rounded-l-md hover:bg-gray-50">
                 <ChevronLeft className="w-4 h-4 text-black" />
               </button>
-              <button className="px-4 py-2 border-t border-b bg-gray-600 text-white">
-                1
-              </button>
-              <button className="px-4 py-2 border-t border-b text-gray-300 hover:bg-gray-50 hover:text-black">
-                2
-              </button>
+              <button className="px-4 py-2 border-t border-b bg-gray-600 text-white">1</button>
+              <button className="px-4 py-2 border-t border-b text-gray-300 hover:bg-gray-50 hover:text-black">2</button>
               <button className="p-2 border rounded-r-md hover:bg-gray-50">
                 <ChevronRight className="w-4 h-4 text-black" />
               </button>

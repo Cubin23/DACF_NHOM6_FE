@@ -23,29 +23,22 @@ const HomePage: FC = () => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get("http://localhost:8888/productVariant");
-        console.log("Response:", res.data);
         const data = res.data;
 
         if (Array.isArray(data)) {
           const mapped = data.map((item: any) => {
-            // Xử lý giá tiền từ kiểu Decimal128
-            const rawPrice = item.price;
-            const price = parseFloat(rawPrice?.$numberDecimal || "0");
-
-            console.log("Mapped price:", price);
-
+            const price = parseFloat(item.price?.$numberDecimal || "0");
             return {
               _id: item._id,
-              name: item.product_id?.name || "Không tên",
-              image: item.product_id?.image || "",
+              name: item.product?.name || "Không tên",
+              image: item.product?.image || "", // <-- lấy từ `$lookup`
               price,
-              status: item.product_id?.status || "Còn hàng",
+              status: item.product?.status || "Còn hàng",
             };
           });
-
           setProducts(mapped);
         } else {
-          console.warn("Dữ liệu không đúng dạng mảng:", data);
+          console.warn("Dữ liệu không phải mảng:", data);
           setProducts([]);
         }
       } catch (error) {

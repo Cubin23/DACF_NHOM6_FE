@@ -1,221 +1,146 @@
-import type React from "react";
+// CheckoutPage.tsx
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+interface CartProduct {
+  _id: string;
+  name: string;
+  image: string;
+  price: number;
+  quantity: number;
+  size: string;
+}
 
 const CheckoutPage = () => {
+  const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState<CartProduct[]>([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [tax, setTax] = useState(0);
+  const [total, setTotal] = useState(0);
+
   const [formData, setFormData] = useState({
-    streetAddress: "",
-    city: "",
-    state: "",
-    phonenumber: "",
-    country: "",
-    email: "",
     fullName: "",
+    phone: "",
+    email: "",
+    address: "",
+    province: "",
+    district: "",
+    ward: "",
+    note: ""
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem("checkoutItems") || "[]");
+    setCartItems(storedItems);
+
+    const sub = storedItems.reduce((sum: number, item: CartProduct) => sum + item.price * item.quantity, 0);
+    const calculatedTax = Math.round(sub * 0.05);
+    setSubtotal(sub);
+    setTax(calculatedTax);
+    setTotal(sub + calculatedTax);
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+
+    const orderData = {
+      user_id: "6445a8b123456789abcdef05", // replace with actual user id
+      customer_info: {
+        username: formData.fullName,
+        phone_number: formData.phone,
+        email: formData.email,
+      },
+      receiver_info: {
+        username: formData.fullName,
+        phone_number: formData.phone,
+        email: formData.email,
+      },
+      shipping_address: {
+        detail_address: formData.address,
+        province: formData.province,
+        district: formData.district,
+        ward: formData.ward,
+      },
+      total_amount: total,
+      shipping_fee: 0,
+      payment_method: "cash",
+      user_note: formData.note,
+      products: cartItems.map(item => ({
+        product_id: item._id,
+        name: item.name,
+        image: item.image,
+        size: item.size,
+        price: item.price,
+        quantity: item.quantity
+      }))
+    };
+
+    try {
+      const res = await axios.post("http://localhost:8888/orders", orderData);
+      alert("Đặt hàng thành công!");
+      localStorage.removeItem("checkoutItems");
+      navigate("/payment-success");
+    } catch (error) {
+      console.error("Lỗi đặt hàng:", error);
+      alert("Không thể đặt hàng.");
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center text-sm mb-8">
-        <Link to="/" className="text-gray-500 hover:text-gray-900">
-          Ecommerce
-        </Link>
+        <Link to="/" className="text-gray-500 hover:text-gray-900">Ecommerce</Link>
         <span className="mx-2 text-gray-400">/</span>
         <span className="font-medium text-black">Checkout</span>
       </div>
 
       <h1 className="text-2xl font-bold mb-8 text-black">Checkout</h1>
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-2/3">
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-6 text-black">
-              Shipping Address
-            </h2>
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="streetAddress"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Street Address
-                  </label>
-                  <input
-                    type="text"
-                    id="streetAddress"
-                    name="streetAddress"
-                    value={formData.streetAddress}
-                    onChange={handleChange}
-                    className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="city"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      City
-                    </label>
-                    <input
-                      type="text"
-                      id="city"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleChange}
-                      className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="state"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      State
-                    </label>
-                    <input
-                      type="text"
-                      id="state"
-                      name="state"
-                      value={formData.state}
-                      onChange={handleChange}
-                      className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="zipCode"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Phone Number
-                    </label>
-                    <input
-                      type="text"
-                      id="phonenumber"
-                      name="phonenumber"
-                      value={formData.phonenumber}
-                      onChange={handleChange}
-                      className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="country"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Country
-                    </label>
-                    <input
-                      type="text"
-                      id="country"
-                      name="country"
-                      value={formData.country}
-                      onChange={handleChange}
-                      className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="fullName"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Full name
-                    </label>
-                    <input
-                      type="text"
-                      id="fullName"
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      className="w-full text-black pl-4 py-2 pr-4 text-sm bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    />
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-8">
+        {/* Thông tin giao hàng */}
+        <div className="lg:w-2/3 space-y-4">
+          <input name="fullName" placeholder="Full Name" onChange={handleChange} className="w-full p-3 border rounded" required />
+          <input name="phone" placeholder="Phone Number" onChange={handleChange} className="w-full p-3 border rounded" required />
+          <input name="email" type="email" placeholder="Email" onChange={handleChange} className="w-full p-3 border rounded" required />
+          <input name="address" placeholder="Detail Address" onChange={handleChange} className="w-full p-3 border rounded" required />
+          <textarea name="note" placeholder="Ghi chú" onChange={handleChange} className="w-full p-3 border rounded"></textarea>
         </div>
 
-        <div className="lg:w-1/3">
-          <div className="border rounded-lg p-6">
-            <h2 className="text-lg font-semibold mb-4 text-black">
-              Your Order
-            </h2>
-
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <Link
-                  to="/cart"
-                  className="text-sm text-gray-600 hover:text-gray-900"
-                >
-                  Edit Cart
-                </Link>
+        {/* Tóm tắt đơn hàng */}
+        <div className="lg:w-1/3 border rounded p-6 space-y-4">
+          <h2 className="text-lg font-semibold">Your Order</h2>
+          {cartItems.map(item => (
+            <div key={item._id} className="flex gap-4 items-center">
+              <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded border" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">{item.name}</p>
+                <p className="text-xs text-gray-500">Size: {item.size} | Qty: {item.quantity}</p>
               </div>
-
-              <div className="space-y-3 border-b pb-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal:</span>
-                  <span className="text-gray-600">$ 75.00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping:</span>
-                  <span className="text-gray-600">Free</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tax:</span>
-                  <span className="text-gray-600">$ 3.00</span>
-                </div>
-              </div>
-
-              <div className="flex justify-between pt-4 font-semibold">
-                <span className="text-gray-600">Total</span>
-                <span className="text-gray-600">$ 78.00</span>
-              </div>
+              <p className="text-sm">{(item.price * item.quantity).toLocaleString()}₫</p>
             </div>
+          ))}
 
-            <button
-              type="submit"
-              className="w-full block text-center px-6 py-3 bg-gray-900 text-white font-medium rounded hover:bg-gray-800"
-            >
-              Place Order
-            </button>
+          <div className="pt-4 border-t">
+            <div className="flex justify-between text-sm">
+              <span>Subtotal</span><span>{subtotal.toLocaleString()}₫</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span>Tax</span><span>{tax.toLocaleString()}₫</span>
+            </div>
+            <div className="flex justify-between font-semibold text-base">
+              <span>Total</span><span>{total.toLocaleString()}₫</span>
+            </div>
           </div>
+
+          <button type="submit" className="w-full bg-black text-white py-3 rounded mt-4">Đặt hàng</button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

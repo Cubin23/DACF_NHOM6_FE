@@ -1,4 +1,3 @@
-// ProductGrid.tsx
 import type { FC } from "react";
 import { Link } from "react-router-dom";
 
@@ -23,15 +22,24 @@ const ProductGrid: FC<ProductGridProps> = ({ products, title }) => (
         {products.map(({ _id, image, name, price, status }) => (
           <div key={_id} className="group">
             <Link to={`/product/${_id}`} className="block">
-            <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
-              <img
-                src={typeof image === 'string' ? image : image.src}
-                width={300}
-                height={300}
-                alt={name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
+              <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                {image ? (
+                  <img
+                    src={image}
+                    alt={name}
+                    width={300}
+                    height={300}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/no-image.jpg";
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                    No Image
+                  </div>
+                )}
+              </div>
             </Link>
             <h3 className="font-medium text-black text-sm">{name}</h3>
             <div className="flex items-center justify-between mt-2">
