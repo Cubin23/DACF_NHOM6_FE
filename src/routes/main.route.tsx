@@ -12,6 +12,8 @@ import VerifyEmail from "../pages/VerifyEmail"
 import Forgotpassword from "../pages/Forgot-password"
 import VerifyOtp from "../pages/VerifyOtp"       // bạn tạo file này
 import ResetPassword from "../pages/ResetPassword" // bạn tạo file này
+import About from "../pages/About"
+import Contact from "../pages/Contact"
 
 export const router = createBrowserRouter([
   {
@@ -27,9 +29,10 @@ export const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <SignUpPage /> },
       { path: "verify-email", element: <VerifyEmail /> },
+      { path: "about", element: <About /> },
+      { path: "contact", element: <Contact /> },
       
       
-      { path: "verify-email", element: <VerifyEmail /> },
       { path: "forgot-password", element: <Forgotpassword /> },
       { path: "forgot-password/verify-otp", element: <VerifyOtp /> },
       { path: "forgot-password/reset", element: <ResetPassword /> },

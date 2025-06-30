@@ -1,4 +1,3 @@
-// ProductDetailPage.tsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Minus, Plus } from "lucide-react";
@@ -14,7 +13,6 @@ interface ProductType {
   _id: string;
   name: string;
   image: string;
-  price: number;
   status: string;
   description?: string;
 }
@@ -38,21 +36,20 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!id) return;
+
       try {
-        const res = await axios.get(`http://localhost:8888/productVariant/${id}`);
-        const { current, variants } = res.data;
+        const res = await axios.get(`http://localhost:8888/products/${id}`);
+        const { product, variants, current } = res.data?.data || {};
 
-        setProduct({
-          _id: current.product_id._id,
-          name: current.product_id.name,
-          image: current.product_id.image,
-          price: Number(current.price?.$numberDecimal || 0),
-          status: current.product_id.status || "Còn hàng",
-          description: current.product_id.description,
-        });
+        if (!product || !variants || variants.length === 0) {
+          console.warn("Không có dữ liệu sản phẩm hợp lệ", res.data);
+          return;
+        }
 
-        setSelectedVariant(current);
+        setProduct(product);
         setVariants(variants);
+        setSelectedVariant(current || variants[0]);
       } catch (err) {
         console.error("Lỗi khi lấy dữ liệu sản phẩm:", err);
       }
@@ -68,7 +65,7 @@ const ProductDetailPage = () => {
 
     const cartItem = {
       _id: selectedVariant._id,
-      product_id: product._id, // ✅ thêm product_id
+      product_id: product._id,
       name: product.name,
       image: product.image,
       price: Number(selectedVariant.price.$numberDecimal),
@@ -97,12 +94,14 @@ const ProductDetailPage = () => {
     }
   };
 
-  if (!product || !selectedVariant) return <div className="text-center py-10">Đang tải sản phẩm...</div>;
+  if (!product || !selectedVariant) {
+    return <div className="text-center py-10">Đang tải sản phẩm...</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center text-sm mb-8">
-        <Link to="/" className="text-gray-500 hover:text-gray-900">Ecommerce</Link>
+        <Link to="/" className="text-gray-500 hover:text-gray-900">Trang chủ</Link>
         <span className="mx-2 text-gray-400">/</span>
         <span className="font-medium text-black">{product.name}</span>
       </div>
@@ -117,11 +116,11 @@ const ProductDetailPage = () => {
         <div className="md:w-1/2">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">{product.name}</h1>
           <div className="text-2xl font-bold text-red-500 mb-4">
-            {Number(selectedVariant.price.$numberDecimal).toLocaleString()}₫
+            {Number(selectedVariant.price.$numberDecimal).toLocaleString("vi-VN")}₫
           </div>
 
           <div className="mb-6">
-            <h3 className="text-sm font-semibold mb-2">DUNG TÍCH</h3>
+            <h3 className="text-sm font-semibold mb-2">Dung tích</h3>
             <div className="grid grid-cols-4 gap-2">
               {variants.map((v) => (
                 <button
@@ -143,13 +142,13 @@ const ProductDetailPage = () => {
           </div>
 
           <div className="mb-6">
-            <h3 className="text-sm font-medium mb-2">SỐ LƯỢNG</h3>
+            <h3 className="text-sm font-medium mb-2">Số lượng</h3>
             <div className="flex">
-              <button onClick={() => setQuantity(prev => Math.max(1, prev - 1))} className="w-10 h-10 border rounded-l">
+              <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-10 h-10 border rounded-l">
                 <Minus className="w-4 h-4" />
               </button>
               <div className="w-14 h-10 border-t border-b flex items-center justify-center">{quantity}</div>
-              <button onClick={() => setQuantity(prev => prev + 1)} className="w-10 h-10 border rounded-r">
+              <button onClick={() => setQuantity(q => q + 1)} className="w-10 h-10 border rounded-r">
                 <Plus className="w-4 h-4" />
               </button>
             </div>
@@ -192,7 +191,9 @@ const ProductDetailPage = () => {
           </div>
 
           <div className="text-sm text-gray-600">
-            {activeTab === "details" ? product.description || "Không có mô tả." : "Chưa có đánh giá nào."}
+            {activeTab === "details"
+              ? product.description || "Không có mô tả."
+              : "Chưa có đánh giá nào."}
           </div>
         </div>
       </div>

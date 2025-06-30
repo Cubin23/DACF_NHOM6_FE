@@ -62,9 +62,11 @@ const ProductListingPage = () => {
           params.append("types", selectedTypes.join(","));
         }
 
-        const res = await fetch(`http://localhost:8888/productVariant?${params.toString()}`);
+        const res = await fetch(`http://localhost:8888/products?${params.toString()}`);
         const json = await res.json();
-        const data = Array.isArray(json) ? json : json.data || [];
+        const data = Array.isArray(json?.data?.products || json?.data?.data)
+          ? json.data.products || json.data.data
+          : [];
         setProducts(data);
       } catch (error) {
         console.error("Lỗi khi tải sản phẩm:", error);
@@ -84,13 +86,14 @@ const ProductListingPage = () => {
           Ecommerce
         </Link>
         <span className="mx-2 text-gray-400">/</span>
-        <span className="mx-2 text-black">Products</span>
+        <span className="text-black">Products</span>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
         <aside className="lg:w-1/4">
           <div className="border rounded-lg p-4 sticky top-4">
             <h2 className="font-medium mb-3 text-black">Filters Sidebar</h2>
+
             <div className="mb-6">
               <h3 className="font-medium mb-3 text-gray-600">Gender</h3>
               <div className="space-y-2">
@@ -110,9 +113,10 @@ const ProductListingPage = () => {
                 ))}
               </div>
             </div>
+
             <div className="mb-6">
               <h3 className="font-medium mb-3 text-gray-600">Size</h3>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 {VOLUMES.map((volume) => (
                   <VolumeButton
                     key={volume}
@@ -146,7 +150,7 @@ const ProductListingPage = () => {
 
           <div className="flex justify-between items-center mb-6">
             <div className="text-sm text-gray-500">
-              Showing {products.length} products.
+              Showing {products.length} product{products.length !== 1 && "s"}.
             </div>
             <div className="flex items-center">
               <span className="text-sm text-gray-500 mr-2">SORT BY</span>
@@ -166,31 +170,31 @@ const ProductListingPage = () => {
               <div className="col-span-full text-center text-gray-400">Không có sản phẩm nào phù hợp.</div>
             ) : (
               products.map((product: any) => {
-                const image = product.product?.image || product.product_id?.image || "";
-                const name = product.product?.name || product.product_id?.name || "No Name";
-                const gender = product.product?.gender || product.product_id?.gender || "Unisex";
-                const volume = product.volume?.label || product.volume_id?.label || "";
-                const price = Number(product.price?.$numberDecimal || 0);
+                const image = product.image || "/no-image.jpg";
+                const name = product.name || "No Name";
+                const gender = product.gender || "Unisex";
+                const brand = product.brand_id?.name || "Không rõ thương hiệu";
+                const category = product.category_id?.name || "Không rõ danh mục";
+                const price = Number(product.price?.$numberDecimal || product.price || 0);
 
                 return (
                   <Link to={`/product/${product._id}`} className="group" key={product._id}>
                     <div className="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                      {image ? (
-                        <img
-                          src={image}
-                          alt={name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No Image</div>
-                      )}
+                      <img
+                        src={image}
+                        alt={name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/no-image.jpg";
+                        }}
+                      />
                     </div>
                     <h3 className="font-medium text-sm text-gray-800">{name}</h3>
                     <div className="text-gray-900 font-semibold mt-1 text-sm">
                       {price > 0 ? `${price.toLocaleString()}₫` : "Chưa có giá"}
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
-                      {gender} | {volume}
+                      {gender} | {brand} | {category}
                     </div>
                   </Link>
                 );

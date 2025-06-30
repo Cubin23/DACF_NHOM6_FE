@@ -12,8 +12,8 @@ interface Product {
   _id: string;
   name: string;
   image: string;
-  price: number;
-  status: string;
+  category: string;
+  brand: string;
 }
 
 const HomePage: FC = () => {
@@ -22,25 +22,22 @@ const HomePage: FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:8888/productVariant");
-        const data = res.data;
+        const res = await axios.get("http://localhost:8888/products");
+        const rawProducts = Array.isArray(res.data?.data?.data)
+          ? res.data.data.data
+          : [];
 
-        if (Array.isArray(data)) {
-          const mapped = data.map((item: any) => {
-            const price = parseFloat(item.price?.$numberDecimal || "0");
-            return {
-              _id: item._id,
-              name: item.product?.name || "Không tên",
-              image: item.product?.image || "", // <-- lấy từ `$lookup`
-              price,
-              status: item.product?.status || "Còn hàng",
-            };
-          });
-          setProducts(mapped);
-        } else {
-          console.warn("Dữ liệu không phải mảng:", data);
-          setProducts([]);
-        }
+        const mapped = rawProducts
+          .filter((item: any) => item._id) // Chỉ lấy sản phẩm có _id
+          .map((item: any) => ({
+            _id: item._id || "",
+            name: item.name || "Không tên",
+            image: item.image || "/no-image.jpg",
+            category: item.category_id?.name || "Không rõ danh mục",
+            brand: item.brand_id?.name || "Không rõ thương hiệu",
+          }));
+
+        setProducts(mapped);
       } catch (error) {
         console.error("Lỗi khi lấy sản phẩm:", error);
         setProducts([]);
@@ -50,8 +47,8 @@ const HomePage: FC = () => {
     fetchProducts();
   }, []);
 
-  const bestSellers = products.slice(0, 4); // 4 sản phẩm đầu
-  const featured = products.slice(4, 8);    // 4 sản phẩm tiếp theo
+  const bestSellers = products.slice(0, 4);
+  const featured = products.slice(4, 8);
 
   return (
     <div>
