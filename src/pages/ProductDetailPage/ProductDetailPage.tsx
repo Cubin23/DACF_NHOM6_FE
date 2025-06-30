@@ -34,30 +34,31 @@ const ProductDetailPage = () => {
   const [selectedVariant, setSelectedVariant] = useState<VariantType | null>(null);
   const [activeTab, setActiveTab] = useState("details");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(`http://localhost:8888/productVariant/${id}`);
-        const { current, variants } = res.data;
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8888/productVariant/${id}`);
+      const { current, variants } = res.data;
 
-        setProduct({
-          _id: current.product_id._id,
-          name: current.product_id.name,
-          image: current.product_id.image,
-          price: Number(current.price?.$numberDecimal || 0),
-          status: current.product_id.status || "Còn hàng",
-          description: current.product_id.description,
-        });
+      setProduct({
+        _id: current.product_id._id,
+        name: current.product_id.name,
+        image: current.product_id.image,
+        price: Number(current.price?.$numberDecimal || 0),
+        status: current.product_id.status || "Còn hàng",
+        description: current.product_id.description,
+      });
 
-        setSelectedVariant(current);
-        setVariants(variants);
-      } catch (err) {
-        console.error("Lỗi khi lấy dữ liệu sản phẩm:", err);
-      }
-    };
+      setSelectedVariant(current);
+      setVariants(variants);
+    } catch (err) {
+      console.error("Lỗi khi lấy dữ liệu sản phẩm:", err);
+    }
+  };
 
-    fetchData();
-  }, [id]);
+  fetchData();
+}, [id]);
+
 
   const addToCart = (redirectToCheckout = false) => {
     if (!product || !selectedVariant) return;

@@ -12,7 +12,7 @@ interface Product {
   _id: string;
   name: string;
   image: string;
-  price: number;
+  category: string;
   status: string;
 }
 
@@ -22,23 +22,24 @@ const HomePage: FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:8888/productVariant");
-        const data = res.data;
+        const res = await axios.get("http://localhost:8888/products");
 
-        if (Array.isArray(data)) {
-          const mapped = data.map((item: any) => {
-            const price = parseFloat(item.price?.$numberDecimal || "0");
+        const raw = res.data;
+        const items = raw?.data?.data;
+
+        if (Array.isArray(items)) {
+          const mapped = items.map((item: any) => {
             return {
               _id: item._id,
-              name: item.product?.name || "Không tên",
-              image: item.product?.image || "", // <-- lấy từ `$lookup`
-              price,
-              status: item.product?.status || "Còn hàng",
+              name: item.product?.name || item.name || "Không tên",
+              image: item.product?.image || item.image || "",
+              category: item.product?.category_id?.name || item.category_id?.name || "Chưa rõ",
+              status: item.product?.status || item.status || "Còn hàng",
             };
           });
           setProducts(mapped);
         } else {
-          console.warn("Dữ liệu không phải mảng:", data);
+          console.warn("❌ Dữ liệu không phải mảng:", raw);
           setProducts([]);
         }
       } catch (error) {
@@ -50,16 +51,16 @@ const HomePage: FC = () => {
     fetchProducts();
   }, []);
 
-  const bestSellers = products.slice(0, 4); // 4 sản phẩm đầu
-  const featured = products.slice(4, 8);    // 4 sản phẩm tiếp theo
+  const bestSellers = products.slice(0, 4);
+  const featured = products.slice(4, 8);
 
   return (
     <div>
       <HeroSection />
       <Features />
-      <ProductGrid products={bestSellers} title="Sản phẩm bán chạy" />
+      <ProductGrid products={bestSellers} title="Sản phẩm bán chạy" showCategory />
       <BrowseCategories />
-      <ProductGrid products={featured} title="Sản phẩm nổi bật" />
+      <ProductGrid products={featured} title="Sản phẩm nổi bật" showCategory />
       <Newsletter />
     </div>
   );
