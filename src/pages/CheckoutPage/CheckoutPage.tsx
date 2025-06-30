@@ -1,15 +1,14 @@
-// CheckoutPage.tsx
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface CartProduct {
-  _id: string;
+  _id: string;         // Là product_id
   name: string;
   image: string;
   price: number;
   quantity: number;
-  size: string;
+  size: string;        // Là volume.label
 }
 
 const CheckoutPage = () => {
@@ -27,21 +26,26 @@ const CheckoutPage = () => {
     province: "",
     district: "",
     ward: "",
-    note: ""
+    note: "",
   });
 
   useEffect(() => {
     const storedItems = JSON.parse(localStorage.getItem("checkoutItems") || "[]");
     setCartItems(storedItems);
 
-    const sub = storedItems.reduce((sum: number, item: CartProduct) => sum + item.price * item.quantity, 0);
+    const sub = storedItems.reduce(
+      (sum: number, item: CartProduct) => sum + item.price * item.quantity,
+      0
+    );
     const calculatedTax = Math.round(sub * 0.05);
     setSubtotal(sub);
     setTax(calculatedTax);
     setTotal(sub + calculatedTax);
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -50,7 +54,7 @@ const CheckoutPage = () => {
     e.preventDefault();
 
     const orderData = {
-      user_id: "6445a8b123456789abcdef05", // replace with actual user id
+      user_id: "6445a8b123456789abcdef05", // Thay bằng ID người dùng thực tế nếu có auth
       customer_info: {
         username: formData.fullName,
         phone_number: formData.phone,
@@ -71,24 +75,32 @@ const CheckoutPage = () => {
       shipping_fee: 0,
       payment_method: "cash",
       user_note: formData.note,
-      products: cartItems.map(item => ({
+      products: cartItems.map((item) => ({
         product_id: item._id,
         name: item.name,
         image: item.image,
-        size: item.size,
+        size: item.size.trim(), // KHỚP với volume.label trong DB
         price: item.price,
-        quantity: item.quantity
-      }))
+        quantity: item.quantity,
+      })),
     };
 
     try {
-      const res = await axios.post("http://localhost:8888/orders", orderData);
+      await axios.post("http://localhost:8888/orders", orderData);
       alert("Đặt hàng thành công!");
       localStorage.removeItem("checkoutItems");
-      navigate("/payment-success");
-    } catch (error) {
-      console.error("Lỗi đặt hàng:", error);
-      alert("Không thể đặt hàng.");
+      navigate("/");
+    } catch (error: any) {
+      console.error("❌ Lỗi đặt hàng:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        const msg =
+          error.response.data?.message ||
+          error.response.data?.error ||
+          "Không thể đặt hàng";
+        alert("Lỗi đặt hàng: " + msg);
+      } else {
+        alert("Không thể đặt hàng. Vui lòng thử lại sau.");
+      }
     }
   };
 
@@ -103,20 +115,20 @@ const CheckoutPage = () => {
       <h1 className="text-2xl font-bold mb-8 text-black">Checkout</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-8">
-        {/* Thông tin giao hàng */}
+        {/* Shipping Info */}
         <div className="lg:w-2/3 space-y-4">
           <input name="fullName" placeholder="Full Name" onChange={handleChange} className="w-full p-3 border rounded" required />
           <input name="phone" placeholder="Phone Number" onChange={handleChange} className="w-full p-3 border rounded" required />
           <input name="email" type="email" placeholder="Email" onChange={handleChange} className="w-full p-3 border rounded" required />
           <input name="address" placeholder="Detail Address" onChange={handleChange} className="w-full p-3 border rounded" required />
-          <textarea name="note" placeholder="Ghi chú" onChange={handleChange} className="w-full p-3 border rounded"></textarea>
+          <textarea name="note" placeholder="Note (optional)" onChange={handleChange} className="w-full p-3 border rounded"></textarea>
         </div>
 
-        {/* Tóm tắt đơn hàng */}
-        <div className="lg:w-1/3 border rounded p-6 space-y-4">
+        {/* Order Summary */}
+        <div className="lg:w-1/3 border rounded p-6 space-y-4 bg-gray-50">
           <h2 className="text-lg font-semibold">Your Order</h2>
-          {cartItems.map(item => (
-            <div key={item._id} className="flex gap-4 items-center">
+          {cartItems.map((item) => (
+            <div key={item._id + item.size} className="flex gap-4 items-center">
               <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded border" />
               <div className="flex-1">
                 <p className="text-sm font-medium">{item.name}</p>
@@ -138,7 +150,9 @@ const CheckoutPage = () => {
             </div>
           </div>
 
-          <button type="submit" className="w-full bg-black text-white py-3 rounded mt-4">Đặt hàng</button>
+          <button type="submit" className="w-full bg-black text-white py-3 rounded mt-4 hover:bg-gray-800">
+            Đặt hàng
+          </button>
         </div>
       </form>
     </div>
