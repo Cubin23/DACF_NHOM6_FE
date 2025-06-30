@@ -22,7 +22,7 @@ const HomePage: FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:8888/productVariant");
+        const res = await axios.get("http://localhost:3000/productVariant");
         const data = res.data;
 
         if (Array.isArray(data)) {

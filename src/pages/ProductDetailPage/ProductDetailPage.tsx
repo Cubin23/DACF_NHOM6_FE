@@ -37,7 +37,7 @@ const ProductDetailPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:8888/productVariant/${id}`);
+        const res = await axios.get(`http://localhost:3000/productVariant/${id}`);
         const { current, variants } = res.data;
 
         setProduct({

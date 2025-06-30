@@ -3,15 +3,17 @@ import MainLayout from "../components/layouts/MainLayout"
 import AccountPage from "../pages/AccountPage/AccountPage"
 import CartPage from "../pages/CartPage/CartPage"
 import CheckoutPage from "../pages/CheckoutPage/CheckoutPage"
+import Forgotpassword from "../pages/Forgot-password"
 import HomePage from "../pages/HomePage/HomePage"
 import LoginPage from "../pages/Login/LoginPage"
+import CodOrderResultPage from "../pages/PaymentSuccessPage"
 import ProductDetailPage from "../pages/ProductDetailPage/ProductDetailPage"
 import ProductListingPage from "../pages/ProductList/ProductListingPage"
+import ResetPassword from "../pages/ResetPassword"; // bạn tạo file này
 import SignUpPage from "../pages/SignUp/SignUpPage"
 import VerifyEmail from "../pages/VerifyEmail"
-import Forgotpassword from "../pages/Forgot-password"
-import VerifyOtp from "../pages/VerifyOtp"       // bạn tạo file này
-import ResetPassword from "../pages/ResetPassword" // bạn tạo file này
+import VerifyOtp from "../pages/VerifyOtp"; // bạn tạo file này
+import ReturnVnpayPage from "../pages/VnpayReturnPage"
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +29,9 @@ export const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <SignUpPage /> },
       { path: "verify-email", element: <VerifyEmail /> },
+
+      { path: "cod/result", element: <CodOrderResultPage /> },
+      { path: "vnpay/result", element: <ReturnVnpayPage /> },
       
       
       { path: "verify-email", element: <VerifyEmail /> },
